@@ -1,6 +1,5 @@
 package goutyl
 
-
 import (
 	"encoding/json"
 )

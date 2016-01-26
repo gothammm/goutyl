@@ -7,7 +7,7 @@ import (
 func TestJson(t *testing.T) {
 	jsonByteArr, err := Json(&TestJsonStruct{
 		Email: "test2@test.com",
-		Age: 42,
+		Age:   42,
 		Phone: 12512512,
 	})
 

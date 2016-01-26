@@ -5,12 +5,11 @@ import (
 )
 
 type ApiResponse struct {
-	Error interface{} `json:"error,omitempty"`
+	Error      interface{} `json:"error,omitempty"`
 	statusCode int
-	Message string `json:"message,omitempty"`
-	Payload interface{} `json:"payload,omitempty"`
+	Message    string      `json:"message,omitempty"`
+	Payload    interface{} `json:"payload,omitempty"`
 }
-
 
 func (r ApiResponse) JsonString() string {
 	jsonString, err := JsonString(r)
