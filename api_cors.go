@@ -50,6 +50,9 @@ func (c CORS) Handle(h http.Handler) http.Handler {
 
 func (c *CORS) AddHeader(header string) *CORS {
 	var headerList []string
+	if len(c.optionsMap) <= 0 {
+		c.optionsMap = make(map[string]string)
+	}
 	if c.optionsMap[allowedHeaders] != "" {
 		headerList = strings.Split(c.optionsMap[allowedHeaders], ",")
 		headerList = append(headerList, header)
@@ -57,11 +60,18 @@ func (c *CORS) AddHeader(header string) *CORS {
 		headerList = []string{header}
 	}
 	c.optionsMap[allowedHeaders] = strings.Join(headerList, ",")
+	if c.options.AllowedHeaders != nil {
+		c.options.AllowedHeaders = append(c.options.AllowedHeaders, headerList...)
+	}
 	return c
 }
 
 func (c *CORS) New(opts CORSOptions) *CORS {
 	c.options = opts
+
+	if len(c.optionsMap) <= 0 {
+		c.optionsMap = make(map[string]string)
+	}
 
 	if !c.options.HandleOptions && c.options.OptionsHandler == nil {
 		c.options.HandleOptions = true
@@ -82,10 +92,9 @@ func (c *CORS) New(opts CORSOptions) *CORS {
 	c.optionsMap[allowedMethods] = strings.Join(opts.AllowedMethods[:], ",")
 	c.optionsMap[allowCredentials] = strconv.FormatBool(opts.AllowCredentials)
 	c.optionsMap[maxAge] = strconv.Itoa(opts.MaxAge)
-	if c.optionsMap[allowedHeaders] != nil {
+	if c.optionsMap[allowedHeaders] != "" {
 		headerList := strings.Split(c.optionsMap[allowedHeaders], ",")
-		headerList = append(opts.AllowedHeaders, headerList)
-		c.optionsMap[allowedHeaders] = strings.Join(headerList[:], ",")
+		c.optionsMap[allowedHeaders] = strings.Join(append(opts.AllowedHeaders, headerList...)[:], ",")
 	} else {
 		c.optionsMap[allowedHeaders] = strings.Join(opts.AllowedHeaders[:], ",")
 	}
