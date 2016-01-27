@@ -33,7 +33,7 @@ type CORSOptions struct {
 
 type CORS struct {
 	optionsMap map[string]string
-	corsOpts   CORSOptions
+	options    CORSOptions
 }
 
 func (c CORS) Handle(h http.Handler) http.Handler {
@@ -41,7 +41,7 @@ func (c CORS) Handle(h http.Handler) http.Handler {
 		for i, v := range c.optionsMap {
 			w.Header().Set(i, v)
 		}
-		if c.corsOpts.HandleOptions && r.Method == "OPTIONS" {
+		if c.options.HandleOptions && r.Method == "OPTIONS" {
 			apiResponse := &ApiResponse{Message: "All good."}
 			apiResponse.Status(http.StatusOK).Json(w)
 		}
@@ -61,10 +61,10 @@ func (c *CORS) AddHeader(header string) *CORS {
 }
 
 func (c *CORS) New(opts CORSOptions) *CORS {
-	c.corsOpts = opts
+	c.options = opts
 
-	if !c.corsOpts.HandleOptions && c.corsOpts.OptionsHandler == nil {
-		c.corsOpts.HandleOptions = true
+	if !c.options.HandleOptions && c.options.OptionsHandler == nil {
+		c.options.HandleOptions = true
 	}
 	if len(opts.AllowedOrigins) <= 0 {
 		opts.AllowedOrigins = []string{"*"}
@@ -82,7 +82,13 @@ func (c *CORS) New(opts CORSOptions) *CORS {
 	c.optionsMap[allowedMethods] = strings.Join(opts.AllowedMethods[:], ",")
 	c.optionsMap[allowCredentials] = strconv.FormatBool(opts.AllowCredentials)
 	c.optionsMap[maxAge] = strconv.Itoa(opts.MaxAge)
-	c.optionsMap[allowedHeaders] = strings.Join(opts.AllowedHeaders[:], ",")
+	if c.optionsMap[allowedHeaders] != nil {
+		headerList := strings.Split(c.optionsMap[allowedHeaders], ",")
+		headerList = append(opts.AllowedHeaders, headerList)
+		c.optionsMap[allowedHeaders] = strings.Join(headerList[:], ",")
+	} else {
+		c.optionsMap[allowedHeaders] = strings.Join(opts.AllowedHeaders[:], ",")
+	}
 	return c
 }
 
