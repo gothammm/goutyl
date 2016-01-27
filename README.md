@@ -1,3 +1,3 @@
 # Goutyl
-- Random utility package for Go.
+- Utility package for Go.
 
