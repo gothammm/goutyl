@@ -12,7 +12,7 @@ type TestJsonStruct struct {
 
 func TestApiResponse(t *testing.T) {
 
-	apiResponse := &ApiResponse{Message: "Something Up M8",
+	apiResponse := &Response{Message: "Something Up M8",
 		Payload: &TestJsonStruct{
 			Email: "test@test.com",
 			Age:   100,

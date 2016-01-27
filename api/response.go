@@ -5,14 +5,14 @@ import (
 	"net/http"
 )
 
-type ApiResponse struct {
+type Response struct {
 	Error      interface{} `json:"error,omitempty"`
 	statusCode int
 	Message    string      `json:"message,omitempty"`
 	Payload    interface{} `json:"payload,omitempty"`
 }
 
-func (r ApiResponse) JsonString() string {
+func (r Response) JsonString() string {
 	jsonString, err := utyl.JsonString(r)
 
 	if err != nil {
@@ -21,7 +21,7 @@ func (r ApiResponse) JsonString() string {
 	return jsonString
 }
 
-func (r ApiResponse) Json(w http.ResponseWriter) {
+func (r Response) Json(w http.ResponseWriter) {
 	if r.statusCode == 0 {
 		r.statusCode = 200
 	}
@@ -37,7 +37,7 @@ func (r ApiResponse) Json(w http.ResponseWriter) {
 	w.Write(jsonByteArr)
 }
 
-func (r *ApiResponse) Status(code int) *ApiResponse {
+func (r *Response) Status(code int) *Response {
 	r.statusCode = code
 	return r
 }
