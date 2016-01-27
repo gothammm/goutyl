@@ -1,4 +1,4 @@
-package goutyl
+package api
 
 import (
 	"testing"

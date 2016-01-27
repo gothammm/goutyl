@@ -1,6 +1,7 @@
-package goutyl
+package api
 
 import (
+	utyl "github.com/peek4y/goutyl"
 	"net/http"
 )
 
@@ -12,7 +13,7 @@ type ApiResponse struct {
 }
 
 func (r ApiResponse) JsonString() string {
-	jsonString, err := JsonString(r)
+	jsonString, err := utyl.JsonString(r)
 
 	if err != nil {
 		panic(err)
@@ -25,7 +26,7 @@ func (r ApiResponse) Json(w http.ResponseWriter) {
 		r.statusCode = 200
 	}
 
-	jsonByteArr, err := Json(r)
+	jsonByteArr, err := utyl.Json(r)
 
 	if err != nil {
 		panic(err)
