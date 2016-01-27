@@ -1,15 +1,12 @@
-package goutyl
+package cors
 
 import (
 	"testing"
 )
 
 func TestNewCORSOptions(t *testing.T) {
-	cors := &CORS{}
 
-	cors.AddHeader("X-Test-Role")
-
-	cors.New(CORSOptions{
+	cors := New(Options{
 		MaxAge:           86400,
 		AllowedHeaders:   []string{"X-Service-Role", "Authorization"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
@@ -17,12 +14,13 @@ func TestNewCORSOptions(t *testing.T) {
 		AllowedOrigins:   []string{"*"},
 	})
 
+	cors.AddHeader("X-Test-Role")
+
 	cors.AddHeader("X-Admin-Role")
 
 	if cors.options.AllowedHeaders == nil {
 		t.Error("Expected AllowedHeaders to be non-nil but got, nil")
 	}
-
 
 	var foundXAdminRole bool = false
 

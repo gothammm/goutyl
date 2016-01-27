@@ -1,6 +1,7 @@
-package goutyl
+package cors
 
 import (
+	utyl "github.com/peek4y/goutyl"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,19 +22,9 @@ var (
 	defaultAllowedMethods = []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"}
 )
 
-type CORSOptions struct {
-	AllowedOrigins   []string
-	AllowedMethods   []string
-	AllowedHeaders   []string
-	AllowCredentials bool
-	HandleOptions    bool
-	OptionsHandler   func()
-	MaxAge           int
-}
-
 type CORS struct {
 	optionsMap map[string]string
-	options    CORSOptions
+	options    Options
 }
 
 func (c CORS) Handle(h http.Handler) http.Handler {
@@ -42,7 +33,7 @@ func (c CORS) Handle(h http.Handler) http.Handler {
 			w.Header().Set(i, v)
 		}
 		if c.options.HandleOptions && r.Method == "OPTIONS" {
-			apiResponse := &ApiResponse{Message: "All good."}
+			apiResponse := &utyl.ApiResponse{Message: "All good."}
 			apiResponse.Status(http.StatusOK).Json(w)
 		}
 	})
@@ -66,7 +57,7 @@ func (c *CORS) AddHeader(header string) *CORS {
 	return c
 }
 
-func (c *CORS) New(opts CORSOptions) *CORS {
+func (c *CORS) New(opts Options) *CORS {
 	c.options = opts
 
 	if len(c.optionsMap) <= 0 {
@@ -102,11 +93,21 @@ func (c *CORS) New(opts CORSOptions) *CORS {
 }
 
 func (c *CORS) Default() *CORS {
-	return c.New(CORSOptions{
+	return c.New(Options{
 		AllowedOrigins:   defaultAllowedOrigins,
 		AllowedHeaders:   defaultAllowedHeaders,
 		AllowedMethods:   defaultAllowedMethods,
 		MaxAge:           defaultMaxAge,
 		AllowCredentials: false,
 	})
+}
+
+func New(opts Options) *CORS {
+	cors := &CORS{}
+	return cors.New(opts)
+}
+
+func Default() *CORS {
+	cors := &CORS{}
+	return cors.Default()
 }
