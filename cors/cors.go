@@ -33,7 +33,7 @@ func (c CORS) Handle(h http.Handler) http.Handler {
 			w.Header().Set(i, v)
 		}
 		if c.options.HandleOptions && r.Method == "OPTIONS" {
-			apiResponse := &api.ApiResponse{Message: "All good."}
+			apiResponse := &api.Response{Message: "All good."}
 			apiResponse.Status(http.StatusOK).Json(w)
 		}
 	})
