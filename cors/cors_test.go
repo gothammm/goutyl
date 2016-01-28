@@ -19,7 +19,7 @@ func TestNewCORSOptions(t *testing.T) {
 	cors.AddHeader("X-Admin-Role")
 
 	if cors.options.AllowedHeaders == nil {
-		t.Error("Expected AllowedHeaders to be non-nil but got, nil")
+		t.Error("Expected AllowedHeaders to be non-nil but got, nil instead")
 	}
 
 	var foundXAdminRole bool = false
@@ -31,5 +31,26 @@ func TestNewCORSOptions(t *testing.T) {
 	}
 	if !foundXAdminRole {
 		t.Error("Expected AllowedHeaders to contain X-Admin-Role but could not find X-Admin-Role header")
+	}
+}
+
+func TestDefaultCORSOptions(t *testing.T) {
+	cors := Default()
+
+	cors.AddHeader("X-Hello-Header")
+
+	if	cors.options.AllowedHeaders == nil {
+		t.Error("Expected AllowedHeaders to be non-nil but got, nil instead")
+	}
+
+	var foundHelloHeader bool = false
+
+	for _, v := range cors.options.AllowedHeaders {
+		if v == "X-Hello-Header" {
+			foundHelloHeader = true
+		}
+	}
+	if !foundHelloHeader {
+		t.Error("Expected AllowedHeaders to contain X-Hello-Header but could not find X-Hello-Header header")
 	}
 }
