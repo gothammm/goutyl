@@ -36,6 +36,7 @@ func (c CORS) Handle(h http.Handler) http.Handler {
 			apiResponse := &api.Response{Message: "All good."}
 			apiResponse.Status(http.StatusOK).Json(w)
 		}
+		h.ServeHTTP(w, r)
 	})
 }
 

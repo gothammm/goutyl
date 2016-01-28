@@ -32,8 +32,8 @@ func (r Response) Json(w http.ResponseWriter) {
 		panic(err)
 	}
 
-	w.WriteHeader(r.statusCode)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(r.statusCode)
 	w.Write(jsonByteArr)
 }
 
